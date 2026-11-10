@@ -122,78 +122,7 @@ class FileSystem:
     # PHẦN 3 (THÀNH VIÊN 3): find (DFS) + SHELL + ĐỘ PHỨC TẠP
     # ==================================================================
 
-    def find(self, name):
-        """
-        Tìm tất cả tập tin/thư mục có tên = name trong TOÀN BỘ cây
-        bằng DFS (duyệt theo chiều sâu). Trả về danh sách đường dẫn.
-        """
-        result = []
-        self._dfs(self.root, name, result)
-        return result
 
-    def _dfs(self, node, name, result):
-        # B1: xét nút hiện tại (bỏ qua gốc vì gốc không có tên)
-        if node.parent is not None and node.name == name:
-            result.append(self.pwd(node))
-        # B2: nếu là thư mục thì đệ quy xuống từng con (đi sâu trước)
-        if node.is_dir:
-            for child in node.children.values():
-                self._dfs(child, name, result)
-
-
-# ----------------------------------------------------------------------
-# GIAO DIỆN DÒNG LỆNH (SHELL)
-# ----------------------------------------------------------------------
-HELP = """Các lệnh:
-  mkdir <tên>   tạo thư mục        touch <tên>  tạo tập tin
-  ls            liệt kê            cd <đường dẫn>  đổi thư mục (hỗ trợ .. và /)
-  pwd           đường dẫn hiện tại  find <tên>   tìm trong toàn bộ cây (DFS)
-  help          xem trợ giúp       exit         thoát"""
-
-
-def main():
-    fs = FileSystem()
-    print("=== MÔ PHỎNG HỆ THỐNG TẬP TIN ===")
-    print(HELP)
-
-    while True:
-        # Dấu nhắc lệnh hiển thị đường dẫn hiện tại
-        line = input(f"\n{fs.pwd()} $ ").strip()
-        if line == "":
-            continue
-        parts = line.split(maxsplit=1)          # tách lệnh và đối số
-        cmd = parts[0]
-        arg = parts[1].strip() if len(parts) > 1 else ""
-
-        try:
-            if cmd == "mkdir":
-                fs.mkdir(arg)
-            elif cmd == "touch":
-                fs.touch(arg)
-            elif cmd == "ls":
-                items = fs.ls()
-                print("  ".join(items) if items else "(trống)")
-            elif cmd == "cd":
-                fs.cd(arg if arg else "/")       # cd không đối số -> về gốc
-            elif cmd == "pwd":
-                print(fs.pwd())
-            elif cmd == "find":
-                if arg == "":
-                    raise FileSystemError("Thiếu tên cần tìm")
-                found = fs.find(arg)
-                if found:
-                    print("\n".join(found))
-                else:
-                    print(f"Không tìm thấy '{arg}'")
-            elif cmd == "help":
-                print(HELP)
-            elif cmd == "exit":
-                print("Tạm biệt!")
-                break
-            else:
-                print("Lệnh không tồn tại. Gõ 'help' để xem trợ giúp.")
-        except FileSystemError as e:
-            print("Lỗi:", e)
 
 
 # ----------------------------------------------------------------------
