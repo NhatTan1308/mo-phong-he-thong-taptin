@@ -122,23 +122,7 @@ class FileSystem:
     # PHẦN 3 (THÀNH VIÊN 3): find (DFS) + SHELL + ĐỘ PHỨC TẠP
     # ==================================================================
 
-    def find(self, name):
-        """
-        Tìm tất cả tập tin/thư mục có tên = name trong TOÀN BỘ cây
-        bằng DFS (duyệt theo chiều sâu). Trả về danh sách đường dẫn.
-        """
-        result = []
-        self._dfs(self.root, name, result)
-        return result
 
-    def _dfs(self, node, name, result):
-        # B1: xét nút hiện tại (bỏ qua gốc vì gốc không có tên)
-        if node.parent is not None and node.name == name:
-            result.append(self.pwd(node))
-        # B2: nếu là thư mục thì đệ quy xuống từng con (đi sâu trước)
-        if node.is_dir:
-            for child in node.children.values():
-                self._dfs(child, name, result)
 
 
 # ----------------------------------------------------------------------
