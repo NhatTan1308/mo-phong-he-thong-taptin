@@ -67,7 +67,8 @@ class FileSystem:
 
     # ---------- pwd: đường dẫn của một nút (mặc định là thư mục hiện tại) ----------
     def pwd(self, node=None):
-        node = node or self.current
+        if node is None:
+            node = self.current
         parts = []
         while node.parent is not None:     # đi ngược từ nút lên gốc
             parts.append(node.name)
